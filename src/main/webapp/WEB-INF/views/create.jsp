@@ -12,7 +12,7 @@
 
         <tr>
             <td><label>Описание
-                <input type='text' name='desc'>
+                <input type='text' name='description'>
             </label></td>
         </tr>
 

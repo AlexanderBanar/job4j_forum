@@ -21,8 +21,8 @@ public class CreateControl {
     }
 
     @PostMapping("/createSave")
-    public String createSave(@RequestParam String name, @RequestParam String desc) {
-        posts.add(Post.of(name, desc));
+    public String createSave(@RequestParam String name, @RequestParam String description) {
+        posts.saveOrUpdate(Post.of(name, description));
         return "redirect:/index";
     }
 }

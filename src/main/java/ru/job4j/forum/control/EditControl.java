@@ -27,11 +27,11 @@ public class EditControl {
 
     @PostMapping("/editSave")
     public String editSave(@RequestParam int id, @RequestParam String name,
-                           @RequestParam String desc) {
+                           @RequestParam String description) {
         Post post = posts.getPost(id);
         post.setName(name);
-        post.setDesc(desc);
-        posts.update(id, post);
+        post.setDescription(description);
+        posts.saveOrUpdate(post);
         return "redirect:/index";
     }
 }

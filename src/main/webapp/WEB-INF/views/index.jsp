@@ -50,7 +50,7 @@
                 <tr>
                     <td> <a href='<c:url value="/edit?id=${post.id}"/>'>изменить</a> </td>
                     <td><c:out value="${post.name}"/></td>
-                    <td><c:out value="${post.desc}"/></td>
+                    <td><c:out value="${post.description}"/></td>
                     <td><c:out value="${post.created.getTime()}"/></td>
                 </tr>
             </c:forEach>

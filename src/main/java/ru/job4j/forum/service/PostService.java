@@ -2,39 +2,30 @@ package ru.job4j.forum.service;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.forum.model.Post;
+import ru.job4j.forum.store.PostRepository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PostService {
-    private final Map<Integer, Post> posts = new HashMap<>();
-    private int counter = 1;
+    private final PostRepository posts;
 
-    public PostService() {
-        Post initPost = Post.of("Олег", "Продаю машину ладу 01.");
-        int id = counter++;
-        initPost.setId(id);
-        posts.put(id, initPost);
+    public PostService(PostRepository posts) {
+        this.posts = posts;
     }
 
     public List<Post> getPosts() {
-        return new ArrayList<>(posts.values());
+        List<Post> rsl = new ArrayList<>();
+        posts.findAll().forEach(rsl::add);
+        return rsl;
     }
 
-    public void add(Post post) {
-        int id = counter++;
-        post.setId(id);
-        posts.put(id, post);
+    public void saveOrUpdate(Post post) {
+        posts.save(post);
     }
 
     public Post getPost(int id) {
-        return posts.get(id);
-    }
-
-    public void update(int id, Post post) {
-        posts.put(id, post);
+        return posts.findById(id).orElse(null);
     }
 }
