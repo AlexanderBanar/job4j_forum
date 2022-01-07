@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.forum.model.Post;
-import ru.job4j.forum.service.PostService;
+import ru.job4j.forum.store.PostRepository;
 
 @Controller
 public class CreateControl {
-    private final PostService posts;
+    private final PostRepository posts;
 
-    public CreateControl(PostService posts) {
+    public CreateControl(PostRepository posts) {
         this.posts = posts;
     }
 
@@ -22,7 +22,7 @@ public class CreateControl {
 
     @PostMapping("/createSave")
     public String createSave(@RequestParam String name, @RequestParam String description) {
-        posts.saveOrUpdate(Post.of(name, description));
+        posts.save(Post.of(name, description));
         return "redirect:/index";
     }
 }

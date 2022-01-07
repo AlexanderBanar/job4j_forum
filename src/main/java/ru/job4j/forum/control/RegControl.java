@@ -1,19 +1,26 @@
 package ru.job4j.forum.control;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
-import ru.job4j.forum.service.UserService;
+import ru.job4j.forum.model.User;
+import ru.job4j.forum.store.AuthorityRepository;
+import ru.job4j.forum.store.UserRepository;
 
 @Controller
 public class RegControl {
-    private final UserService users;
+    private final PasswordEncoder encoder;
+    private final UserRepository users;
+    private final AuthorityRepository authorities;
 
-    public RegControl(UserService users) {
+    public RegControl(PasswordEncoder encoder, UserRepository users, AuthorityRepository authorities) {
+        this.encoder = encoder;
         this.users = users;
+        this.authorities = authorities;
     }
 
     @GetMapping("/reg")
@@ -22,15 +29,16 @@ public class RegControl {
     }
 
     @PostMapping("/reg")
-    public String regSave(@RequestParam String username, @RequestParam String password,
-                          Model model) {
-        if (users.isRegistered(username)) {
+    public String regSave(@ModelAttribute User user, Model model) {
+        if (users.findByUsername(user.getUsername()) != null) {
             String errorMessage = "user with this username is already registered";
             model.addAttribute("errorMessage", errorMessage);
             return "reg";
-        } else {
-            users.add(username, password);
         }
+        user.setEnabled(true);
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setAuthority(authorities.findByAuthority("ROLE_USER"));
+        users.save(user);
         return "redirect:/login";
     }
 }
